@@ -1,9 +1,30 @@
 (function(window, undefined){
 	"use strict";
 
-	// var meetupView = Backbone.view.extend({
+	var meetupView = Backbone.View.extend({
 
-	// })
+		tagname: "div",
+		className: "meetups",
+		initialize: function(opts){
+
+			this.options = _.extend(
+				{},
+				{
+					$container: $('body')
+				},
+				opts
+				);
+
+			this.options.$container.append(this.el);
+
+			this.render();
+		},
+		
+		template: "<h3>{name}</h3><hr><h6>{description}</h6>",
+		render: function(){
+			this.el.innerHTML = _.template(this.template, this.options);
+		}
+	})
 
 
 function MeetupClient(options){
@@ -41,7 +62,13 @@ MeetupClient.prototype.makeRequest = function(){
 
 	$.when(this.queryAPI("77002", "javascript")
 		).then(function(data){
+			
 			console.log(data);
+
+			arguments[0].results.forEach(function(data){
+				new meetupView(data);
+			})
+
 		});
 };
 
